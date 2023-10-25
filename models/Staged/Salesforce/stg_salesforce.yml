@@ -1,0 +1,320 @@
+version: 2
+
+models:
+  - name: stg_salesforce_account
+    description: Represents an individual account, which is an organization or person involved with your business (such as customers, competitors, and partners).
+    columns:
+      - name: id
+        description: The unique, system-generated ID assigned during creation
+        tests:
+          - not_null
+          - unique
+      - name: _fivetran_synced
+        description: The time at which fivetran last synced this record
+      - name: _fivetran_active
+        description: True if record is active, used to filter out only active records if History Mode is enabled
+      - name: account_number
+        description: Account number assigned to this account (not the unique, system-generated ID assigned during creation).
+      - name: account_source
+        description: The source of the account record. For example, Advertisement, Data.com, or Trade Show.
+      - name: annual_revenue
+        description: Estimated annual revenue of the account.
+        tests:
+          - contains_only_numbers
+      - name: billing_city
+        description: Details for the billing address of this account.
+      - name: billing_country
+        description: Details for the billing address of this account.
+      - name: billing_country_code
+        description: The ISO country code for the account’s billing address.
+      - name: billing_geocode_accuracy
+        description: Accuracy level of the geocode for the billing address. See Compound Field Considerations and Limitations for details on geolocation compound fields.
+      - name: billing_latitude
+        description: Used with BillingLongitude to specify the precise geolocation of a billing address.
+      - name: billing_longitude
+        description: Used with BillingLatitude to specify the precise geolocation of a billing address.
+      - name: billing_postal_code
+        description: Details for the billing address of this account.
+      - name: billing_state
+        description: Details for the billing address of this account.
+      - name: billing_state_code
+        description: The ISO state code for the account’s billing address.
+      - name: billing_street
+        description: Street address for the billing address of this account.
+      - name: description
+        description: Text description of the account.
+      - name: fax
+        description: Fax number for the account.
+      - name: industry
+        description: An industry associated with this account.
+      - name: is_deleted
+        description: Indicates whether the object has been moved to the Recycle Bin (true) or not (false).
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: jigsaw_company_id
+        description: References the ID of a company in Data.com. If an account has a value in this field, it means that the account was imported from Data.com.
+      - name: last_activity_date
+        description: Value is one of the following, whichever is the most recent
+      - name: last_referenced_date
+        description: The timestamp when the current user last accessed this record, a record related to this record, or a list view.
+      - name: last_viewed_date
+        description: The timestamp when the current user last viewed this record or list view. If this value is null, the user might have only accessed this record or list view (LastReferencedDate) but not viewed it.
+      - name: master_record_id
+        description: If this object was deleted as the result of a merge, this field contains the ID of the record that was kept. If this object was deleted for any other reason, or has not been deleted, the value is null.
+      - name: name
+        description: Required. Name of the account.
+      - name: number_of_employees
+        description: Number of employees working at the company represented by this account.
+      - name: owner_id
+        description: The ID of the user who currently owns this account.
+        tests:
+          - not_null
+      - name: ownership
+        description: Ownership type for the account, for example Private, Public, or Subsidiary.
+      - name: parent_id
+        description: ID of the parent object, if any.
+        tests:
+          - unique
+      - name: phone
+        description: Phone number for this account.
+      - name: photo_url
+        description: Path to be combined with the URL of a Salesforce instance (for example, https://yourInstance.salesforce.com/) to generate a URL to request the social network profile image associated with the account.
+      - name: rating
+        description: The account’s prospect rating, for example Hot, Warm, or Cold.
+      - name: record_type_id
+        description: ID of the record type assigned to this object.
+      - name: shipping_city
+        description: Details of the shipping address for this account
+      - name: shipping_country
+        description: Details of the shipping address for this account. Country
+      - name: shipping_country_code
+        description: The ISO country code for the account’s shipping address.
+      - name: shipping_geocode_accuracy
+        description: Accuracy level of the geocode for the shipping address.
+      - name: shipping_latitude
+        description: Used with ShippingLongitude to specify the precise geolocation of a shipping address.
+      - name: shipping_longitude
+        description: Used with ShippingLatitude to specify the precise geolocation of an address.
+      - name: shipping_postal_code
+        description: Details of the shipping address for this account. Postal code
+      - name: shipping_state
+        description: Details of the shipping address for this account. State
+      - name: shipping_state_code
+        description: The ISO state code for the account’s shipping address.
+      - name: shipping_street
+        description: The street address of the shipping address for this account.
+      - name: sic
+        description: Standard Industrial Classification code of the company’s main business categorization, for example, 57340 for Electronics.
+      - name: sic_desc
+        description: A brief description of an organization’s line of business, based on its SIC code.
+      - name: site
+        description: Name of the account’s location, for example Headquarters or London.
+      - name: ticker_symbol
+        description: The stock market symbol for this account. This field is available on business accounts, not person accounts.
+      - name: type
+        description: Type of account, for example, Customer, Competitor, or Partner.
+      - name: website
+        description: The website of this account.
+      - name: LAST_NAME
+      - name: FIRST_NAME
+      - name: SALUTATION
+      - name: MIDDLE_NAME
+      - name: SUFFIX
+      - name: CREATED_DATE
+      - name: CREATED_BY_ID
+      - name: LAST_MODIFIED_DATE
+      - name: LAST_MODIFIED_BY_ID
+      - name: SYSTEM_MODSTAMP
+      - name: IS_CUSTOMER_PORTAL
+      - name: PERSON_CONTACT_ID
+      - name: IS_PERSON_ACCOUNT
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: PERSON_MAILING_STREET
+      - name: PERSON_MAILING_CITY
+      - name: PERSON_MAILING_STATE
+      - name: PERSON_MAILING_POSTAL_CODE
+      - name: PERSON_MAILING_COUNTRY
+      - name: PERSON_MAILING_STATE_CODE
+      - name: PERSON_MAILING_COUNTRY_CODE
+      - name: PERSON_MAILING_LATITUDE
+      - name: PERSON_MAILING_LONGITUDE
+      - name: PERSON_MAILING_GEOCODE_ACCURACY
+      - name: PERSON_MOBILE_PHONE
+      - name: PERSON_EMAIL
+      - name: PERSON_TITLE
+      - name: PERSON_DEPARTMENT
+      - name: PERSON_LAST_CUREQUEST_DATE
+      - name: PERSON_LAST_CUUPDATE_DATE
+      - name: PERSON_EMAIL_BOUNCED_REASON
+      - name: PERSON_EMAIL_BOUNCED_DATE
+      - name: PERSON_INDIVIDUAL_ID
+        tests:
+          - unique
+      - name: JIGSAW
+      - name: EXCHANGE_SUBSCRIBER_ID_PC
+      - name: _FIVETRAN_DELETED
+      - name: PS_SMSSUBSCRIPTION_UPDATED_PC
+      - name: PS_OPERATIONAL_2_C
+      - name: REMORTGAGE_VOLUME_ESTIMATE_C
+      - name: PS_PEXACERTIFIED_STATUS_PC
+      - name: PS_STRATEGIC_2_C
+      - name: PS_ALCOHOLIC_PREFERENCES_PC
+      - name: PS_INFORMATION_BROKER_C
+      - name: PS_INDUSTRY_MARKET_SHARE_C
+      - name: PS_METHOD_PC
+      - name: PEXA_PAYMENT_AUTHORISERS_PC
+      - name: PS_CUSTOMER_SEGMENT_LEVEL_2_C
+      - name: COMMUNICATION_NOTIFICATIONS_PC
+      - name: PS_ENTITY_TYPE_C
+      - name: PS_STATUS_C
+      - name: PS_CUSTOMER_STATUS_C
+      - name: PS_ACCOUNT_PLAN_QUIP_DOCUMENT_URL_C
+      - name: PS_OUTAGE_NOTIFICATIONS_PC
+      - name: REQUIRES_ADDITIONAL_DIGITAL_CERTIFICATE_PC
+      - name: PS_PEXACERTIFIED_DATE_PC
+      - name: PS_INDUSTRY_PARTNER_TYPE_OTHER_C
+      - name: PS_PHONE_NUMBERS_LAS_WASHED_RESULTS_PC
+      - name: FINANCE_CONTACT_PC
+      - name: SALES_PURCHASE_VOLUME_ESTIMATE_C
+      - name: PEXA_PAYMENT_AUTHORISERS_1_PC
+      - name: PS_OFFER_OPT_OUT_PC
+      - name: PS_PEXAMARKET_SHARE_C
+      - name: PS_REPORTING_MANAGER_PC
+      - name: HOW_WILL_THE_PARTNERSHIP_EXECUTE_THE_AG_C
+      - name: PERSON_ASSISTANT_PHONE
+      - name: SECRET_QUESTION_2_PC
+      - name: PS_QUIP_FOLDER_URL_C
+      - name: PS_REGISTRATION_STATUS_PC
+      - name: CURRENT_CONTRACT_RATE_C
+      - name: PERSON_OTHER_CITY
+      - name: PS_ACTIVATION_DATE_C
+      - name: PUBLIC_CONTACT_PC
+      - name: PS_SIZEOF_LOAN_BOOK_C
+      - name: INDUSTRY_ENGAGEMENT_C
+      - name: PS_RELATIONSHIP_STATUS_PC
+      - name: CONTACT_FREQUENCY_PC
+      - name: PS_FICATEGORY_C
+      - name: PS_CHANNEL_C
+      - name: PS_ASXREFERENCE_CODE_C
+      - name: PS_INDUSTRY_PARTNER_TYPE_C
+      - name: PS_EVENTS_PC
+      - name: PRIMARY_SUBSCRIBER_MANAGER_PC
+      - name: PS_STRATEGIC_3_C
+      - name: PS_OPERATIONAL_3_C
+      - name: PS_ABN_C
+      - name: PS_DATEOF_VOI_PC
+      - name: PERSON_OTHER_PHONE
+      - name: PERSON_OTHER_LONGITUDE
+      - name: PS_ORGANISATION_PC
+      - name: ROLE_PC
+      - name: TRUST_ACCOUNT_OWNERS_PC
+      - name: PS_SMSOPT_OUT_PC
+      - name: EXCHANGE_LAST_LOGIN_PC
+      - name: PS_LEGAL_ENTITY_NAME_C
+      - name: DISC_PROFILE_PC
+      - name: PS_INSTITUTION_TYPE_C
+      - name: PS_EXTERNAL_ID_PC
+      - name: PS_PMS_C
+      - name: SURVEY_OPT_OUT_PC
+      - name: PERSON_OTHER_COUNTRY_CODE
+      - name: PS_DIRECT_REPORTS_PC
+      - name: PS_ENGAGEMENT_C
+      - name: CMT_MEMBER_C
+      - name: SEND_FX_REGO_C
+      - name: FINANCIAL_INSTITUTION_TYPE_C
+      - name: BEHAVIOURAL_SEGMENT_C
+      - name: PS_SYMPOSIUMS_C
+      - name: AUTHORISED_SIGNATORY_PC
+      - name: CONTACT_EXCHANGE_ACCESS_PC
+      - name: PS_BEST_PRACTICE_GROUPS_C
+      - name: PS_LINKED_IN_PC
+      - name: PS_INFORMATION_EVENINGS_C
+      - name: SECRET_QUESTION_2_ANSWER_PC
+      - name: PERSON_LEAD_SOURCE
+      - name: PS_BUSINESS_UNIT_AREA_PC
+      - name: PS_OTHER_INDICATORS_C
+      - name: PS_PANEL_LAWYER_C
+      - name: PERSON_ASSISTANT_NAME
+      - name: PS_WHAT_THEY_LIKE_PC
+      - name: CONTACTS_STATUS_PC
+      - name: PS_EXTERNAL_DOCUMENTS_QUIP_DOCUMENT_URL_C
+      - name: PS_SAME_AS_ENTITY_ADDRESS_PC
+      - name: PERSON_OTHER_POSTAL_CODE
+      - name: EVENT_PARTICIPATION_C
+      - name: PS_AWARDS_WON_C
+      - name: PERSON_OTHER_COUNTRY
+      - name: HOW_MANY_PROPERTY_TRANSACTIONS_PER_MONTH_C
+      - name: PS_VOICOMPLETE_PC
+      - name: PS_DIETARY_REQUIREMENTS_PC
+      - name: PS_CUSTOMER_SEGMENT_LEVEL_0_C
+      - name: PS_BUSINESS_UNIT_NAME_C
+      - name: SECRET_QUESTION_1_PC
+      - name: PS_SECONDARY_EMAIL_PC
+      - name: DATE_LAST_SURVEY_SENT_PC
+      - name: PS_SYSTEM_BYPASS_VALIDATION_DATETIME_C
+      - name: PS_EXTERNAL_ID_C
+      - name: PS_TERMS_ACCEPTED_DATE_PC
+      - name: CAPACITY_FOR_SIGNING_PC
+      - name: PS_OVERALL_HEALTHOF_ACCOUNT_C
+      - name: SUBSCRIBER_MANAGER_PC
+      - name: PS_OFFER_SUBSCRIPTION_UPDATED_PC
+      - name: PERSON_OTHER_STATE_CODE
+      - name: PS_EMAIL_SUBSCRIPTION_UPDATED_PC
+      - name: PS_ACN_C
+      - name: PANEL_DETAILS_C
+      - name: PREFERRED_NAME_PC
+      - name: PS_REOCCURING_MEETINGS_PC
+      - name: SUBSCRIBER_ROLE_PC
+      - name: PS_TRUSTEEOFA_TRUST_C
+      - name: PS_BUSINESS_PHONE_WASH_RESULTS_PC
+      - name: PS_TERMS_CONDITIONS_VERSION_PC
+      - name: PS_FINANCIAL_YEAR_C
+      - name: PS_FOCUSAND_STRUCTUREOF_BUSINESS_C
+      - name: PERSON_OTHER_STATE
+      - name: PERSON_HAS_OPTED_OUT_OF_FAX
+      - name: PS_OPERATIONAL_1_C
+      - name: PS_PMSOTHER_C
+      - name: PS_CONSUMER_ID_PC
+      - name: PS_STRATEGIC_1_C
+      - name: PERSON_OTHER_LATITUDE
+      - name: PRIMARY_SIGNATORY_PC
+      - name: PS_PRIMARY_SOURCEOF_BUSINESS_C
+      - name: PS_PEXACERTIFIED_STATUS_C
+      - name: COMPETITOR_C
+      - name: SECRET_QUESTION_1_ANSWER_PC
+      - name: SUBSCRIBER_MANAGER_C
+      - name: PERSON_DO_NOT_CALL
+      - name: PS_CUSTOMER_SEGMENT_LEVEL_1_C
+      - name: PS_VOIPROVIDER_PC
+      - name: CONTACT_FREQUENCY_C
+      - name: PERSON_HAS_OPTED_OUT_OF_EMAIL
+      - name: WHAT_TYPE_IS_YOUR_TRUSTEE_C
+      - name: PS_PEXACERTIFIED_DATE_C
+      - name: PEXA_SHAREHOLDER_C
+      - name: SUBSCRIBER_ID_PC
+      - name: PERSON_HOME_PHONE
+      - name: PS_MOBILE_PHONE_WASH_RESULTS_PC
+      - name: PERSON_OTHER_STREET
+      - name: COMPANY_NUMBER_UK_C
+      - name: PERSON_OTHER_GEOCODE_ACCURACY
+      - name: PS_PEXADIVISION_PC
+      - name: HOW_WILL_THE_COMPANY_EXECUTE_AGREEMENTS_C
+      - name: PS_PEOPLEINVOLVEDIN_PROPERTY_C
+      - name: PS_NON_ALCOHOLIC_PREFERENCES_PC
+      - name: PS_INFORMATION_BROKER_OTHER_C
+      - name: OTHER_ORGANISATION_TYPE_C
+      - name: CONTRACT_STATUS_C
+      - name: PS_REGISTRATION_DATE_PC
+      - name: PS_LIKELIHOOD_C
+      - name: ENGAGEMENT_PREFERENCE_C
+      - name: PS_BIO_PC
+      - name: PS_ACCOUNT_MANAGEMENT_SEGMENT_C
+      - name: PS_SURVEY_PARTICIPATION_PC
+      - name: PERSON_BIRTHDATE
+      - name: PS_COMMUNICATION_TYPE_PC
+      - name: PEXA_CLIENT_GIFT_PC
+
+ 
