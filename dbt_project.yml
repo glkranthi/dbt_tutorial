@@ -52,3 +52,6 @@ models:
       +database: "CURATE_QUALITYTESTING"
       +schema: "DBT_STAGE_DQ"
       materialized: view
+  elementary:
+    ## elementary models will be created in the schema '<your_schema>_elementary'
+    +schema: "elementary"
