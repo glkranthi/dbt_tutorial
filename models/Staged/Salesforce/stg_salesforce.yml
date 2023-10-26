@@ -1,6 +1,1173 @@
 version: 2
 
 models:
+  - name: stg_salesforce_task
+    description: Represents a business activity such as making a phone call or other to-do items. In the user interface, Task and Event records are collectively referred to as activities.
+    columns:
+      - name: task_id
+        description: The unique, system-generated ID assigned during creation.
+        tests:
+          - not_null
+          - unique
+      - name: _fivetran_synced
+        description: The time at which fivetran last synced this record
+      - name: _fivetran_active
+        description: True if record is active, used to filter out only active records if History Mode is enabled
+      - name: account_id
+        description: Represents the ID of the related Account. The AccountId is determined as follows. If the value of WhatId is any of the following objects, then Salesforce uses that object’s AccountId. Account Opportunity Contract Custom object that is a child of Account If the value of the WhatIdfield is any other object, and the value of the WhoId field is a Contact object, then Salesforce uses that contact’s AccountId. (If your organization uses Shared Activities, then Salesforce uses the AccountId of the primary contact.) Otherwise, Salesforce sets the value of the AccountId field to null. This is a relationship field.
+        tests:
+          - not_null
+      - name: activity_date
+        description: Represents the due date of the task. This field has a timestamp that is always set to midnight in the Coordinated Universal Time (UTC) time zone. The timestamp is not relevant; do not attempt to alter it to accommodate time zone differences. Label is Due Date.
+      - name: call_disposition
+        description: Represents the result of a given call, for example, “we'll call back,” or “call unsuccessful.” Limit is 255 characters. Not subject to field-level security, available for any user in an organization with Salesforce CRM Call Center.
+      - name: call_duration_in_seconds
+        description: Duration of the call in seconds. Not subject to field-level security, available for any user in an organization with Salesforce CRM Call Center.
+      - name: call_object
+        description: Name of a call center. Limit is 255 characters. Not subject to field-level security, available for any user in an organization with Salesforce CRM Call Center.
+      - name: call_type
+        description: "The type of call being answered: Inbound, Internal, or Outbound."
+      - name: completed_date_time
+        description: The date and time the task was saved with a Closed status. For insert, if the task is saved with a Closed status the field is set. If the task is saved with an Open status the field is set to NULL. For update, if the task is saved with a new Closed status, the field is reset. If the task is saved with a new non-closed status, the field is reset to NULL. If the task is saved with the same closed status (that is, unchanged) there is no change to the field.
+      - name: created_by_id
+        description: Created By ID
+        tests:
+          - not_null
+      - name: created_date
+        description: Created Date
+      - name: task_description
+        description: Contains a text description of the task.
+      - name: is_archived
+        description: Indicates whether the event has been archived.
+      - name: is_closed
+        description: Indicates whether the task has been completed (true) or not (false). Is only set indirectly via the Status picklist. Label is Closed.
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: is_deleted
+        description: Deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: is_high_priority
+        description: Indicates a high-priority task. This field is derived from the Priority field.
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: last_modified_by_id
+        description: Last Modified By ID
+      - name: last_modified_date
+        description: Last Modified Date
+      - name: owner_id
+        description: ID of the User or Group who owns the record. Label is Assigned To ID. This field accepts Groups of type Queue only. In the user interface, Group IDs correspond with the queue’s list view names. To create or update tasks assigned to Group, use v48.0 or later. This is a polymorphic relationship field.
+        tests:
+          - not_null
+      - name: priority
+        description: Required. Indicates the importance or urgency of a task, such as high or low.
+        tests:
+          - not_null
+      - name: record_type_id
+        description: ID of the record type assigned to this object.
+        tests:
+          - not_null
+      - name: status
+        description: Required. The status of the task, such as In Progress or Completed. Each predefined Status field implies a value for the IsClosed flag. To obtain picklist values, query the TaskStatus object.
+        tests:
+          - not_null
+      - name: subject
+        description: The subject line of the task, such as “Call” or “Send Quote.”
+      - name: system_modstamp
+        description: System Modstamp
+      - name: task_subtype
+        description: Provides standard subtypes to facilitate creating and searching for specific task subtypes.
+      - name: type
+        description: The type of task, such as Call or Meeting.
+      - name: what_count
+        description: Available to organizations that have Shared Activities enabled. Count of related TaskRelations pertaining to WhatId. Count of the WhatId must be 1 or less.
+      - name: what_id
+        description: The WhatId represents nonhuman objects such as accounts, opportunities, campaigns, cases, or custom objects. WhatIds are polymorphic. Polymorphic means a WhatId is equivalent to the ID of a related object. The label is Related To ID. This is a polymorphic relationship field.
+        tests:
+          - not_null
+          - unique
+      - name: who_count
+        description: Available to organizations that have Shared Activities enabled. Count of related TaskRelations pertaining to WhoId.
+      - name: who_id
+        description: The WhoId represents a human such as a lead or a contact. WhoIds are polymorphic. Polymorphic means a WhoId is equivalent to a contact’s ID or a lead’s ID. The label is Name ID. If Shared Activities is enabled, the value of this field is the ID of the related lead or primary contact. If you add, update, or remove the WhoId field, you might encounter problems with triggers, workflows, and data validation rules that are associated with the record. The label is Name ID. Beginning in API version 37.0, if the contact or lead ID in the WhoId field is not in the TaskWhoIds list, no error occurs and the ID is added to the TaskWhoIds as the primary WhoId. If WhoId is set to null, an arbitrary ID from the existing TaskWhoIds list is promoted to the primary position.
+      - name: REMINDER_DATE_TIME
+      - name: IS_REMINDER_SET
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: RECURRENCE_ACTIVITY_ID
+      - name: IS_RECURRENCE
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: RECURRENCE_START_DATE_ONLY
+      - name: RECURRENCE_END_DATE_ONLY
+      - name: RECURRENCE_TIME_ZONE_SID_KEY
+      - name: RECURRENCE_TYPE
+      - name: RECURRENCE_INTERVAL
+      - name: RECURRENCE_DAY_OF_WEEK_MASK
+      - name: RECURRENCE_DAY_OF_MONTH
+      - name: RECURRENCE_INSTANCE
+      - name: RECURRENCE_MONTH_OF_YEAR
+      - name: RECURRENCE_REGENERATED_TYPE
+      - name: _FIVETRAN_DELETED
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: AFTER_CALL_TIME_C
+      - name: GENESYS_INTERACTION_ID_C
+        tests:
+          - unique
+      - name: WRAP_UP_CODE_C
+      - name: CALL_DISCONNECTED_TIME_C
+      - name: TYPE
+      - name: PS_OTHER_SUB_CATEGORY_C
+      - name: PS_SUB_CATEGORY_C
+      - name: CALLED_NUMBER_C
+      - name: PS_CONTACT_DIRECTION_C
+      - name: GENESYS_QUEUE_NAME_C
+      - name: PS_OTHER_CATEGORY_C
+      - name: INTERNAL_CALL_C
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: PARTICIPANT_ID_C
+        tests:
+          - unique
+      - name: PS_CATEGORY_C
+      - name: IS_VISIBLE_IN_SELF_SERVICE
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: CALL_CONNECTED_TIME_C
+      - name: CALL_MEETING_DURATION_C
+      - name: CALLER_NUMBER_C
+
+  - name: stg_salesforce_opportunity
+    description: Represents an opportunity, which is a sale or pending deal.
+    columns:
+      - name: id
+        description: The unique, system-generated ID assigned during creation.
+        tests:
+          - not_null
+          - unique
+      - name: _fivetran_synced
+        description: The time at which fivetran last synced this record
+      - name: _fivetran_active
+        description: True if record is active, used to filter out only active records if History Mode is enabled
+      - name: account_id
+        description: ID of the account associated with this opportunity.
+        tests:
+          - not_null
+      - name: amount
+        description: Estimated total sale amount. For opportunities with products, the amount is the sum of the related products.
+        tests:
+          - contains_only_numbers
+      - name: campaign_id
+        description: ID of a related Campaign. This field is defined only for those organizations that have the campaign feature Campaigns enabled.
+        tests:
+          - unique
+      - name: close_date
+        description: Required. Date when the opportunity is expected to close.
+        tests:
+          - not_null
+      - name: created_date
+        description: Date when the opportunity is was created.
+      - name: description
+        description: Text description of the opportunity.
+      - name: expected_revenue
+        description: Read-only field that is equal to the product of the opportunity Amount field and the Probability.
+      - name: fiscal
+        description: If fiscal years are not enabled, the name of the fiscal quarter or period in which the opportunity CloseDate falls.
+      - name: fiscal_quarter
+        description: Represents the fiscal quarter. Valid values are 1, 2, 3, or 4.
+      - name: fiscal_year
+        description: Represents the fiscal year, for example, 2006.
+      - name: forecast_category
+        description: Restricted picklist field.
+      - name: forecast_category_name
+        description: The name of the forecast category.
+      - name: has_open_activity
+        description: Indicates whether an opportunity has an open event or task (true) or not (false).
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: has_opportunity_line_item
+        description: Read-only field that indicates whether the opportunity has associated line items. A value of true means that Opportunity line items have been created for the opportunity.
+      - name: has_overdue_task
+        description: Indicates whether an opportunity has an overdue task (true) or not (false).
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: is_closed
+        description: True, if Stage Name Label is Closed.
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: is_deleted
+        description: Indicates whether the object has been moved to the Recycle Bin (true) or not (false).
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: is_won
+        description: True, if Stage Name Label is Won.
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: last_activity_date
+        description: Value is one of the following, whichever is the most recent:Due date of the most recent event logged against the record or Due date of the most recently closed task associated with the record.
+      - name: last_referenced_date
+        description: The timestamp when the current user last accessed this record, a record related to this record, or a list view.
+      - name: last_viewed_date
+        description: The timestamp when the current user last viewed this record or list view. If this value is null, the user might have only accessed this record or list view (LastReferencedDate) but not viewed it.
+      - name: lead_source
+        description: Source of this opportunity, such as Advertisement or Trade Show.
+      - name: name
+        description: Required. A name for this opportunity.
+        tests:
+          - not_null
+      - name: next_step
+        description: Description of next task in closing opportunity.
+      - name: owner_id
+        description: ID of the User who has been assigned to work this opportunity.
+        tests:
+          - not_null
+      - name: pricebook_2_id
+        description: Unavailable as of version 3.0. As of version 8.0, the Pricebook object is no longer available. Use the Pricebook2Id field instead, specifying the ID of the Pricebook2 record.
+      - name: probability
+        description: Percentage of estimated confidence in closing the opportunity.
+      - name: record_type_id
+        description: ID of the record type assigned to this object.
+      - name: stage_name
+        description: Required. Current stage of this record. The StageName field controls several other fields on an opportunity.
+      - name: synced_quote_id
+        description: The ID of the Quote that syncs with the opportunity.
+        tests:
+          - unique
+      - name: type
+        description: Type of opportunity. For example, Existing Business or New Business.
+      - name: IS_WON
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: CREATED_BY_ID
+      - name: LAST_MODIFIED_DATE
+      - name: LAST_MODIFIED_BY_ID
+      - name: SYSTEM_MODSTAMP
+      - name: PUSH_COUNT
+      - name: LAST_STAGE_CHANGE_DATE
+      - name: CONTACT_ID
+      - name: CONTRACT_ID
+      - name: LAST_AMOUNT_CHANGED_HISTORY_ID
+      - name: LAST_CLOSE_DATE_CHANGED_HISTORY_ID
+      - name: BUDGET_CONFIRMED_C
+      - name: DISCOVERY_COMPLETED_C
+      - name: ROI_ANALYSIS_COMPLETED_C
+      - name: LOSS_REASON_C
+      - name: _FIVETRAN_DELETED
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: PS_SUBSCRIBER_ID_C
+      - name: IS_PRIVATE
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: TOTAL_OPPORTUNITY_QUANTITY
+      - name: PS_OTHER_REASON_C
+      - name: PS_DEMONSTRATION_COMPLETED_C
+      - name: PS_SHARED_SALES_COLLATERAL_C
+      - name: PS_EXPIRY_LAPSING_DATE_C
+      - name: PS_MOURETURNED_C
+      - name: PS_OPERATING_MODEL_PREFERENCE_C
+      - name: PS_SUBSCRIPTION_NAME_C
+      - name: PS_LOSS_REASON_C
+      - name: PS_MOUSIGNED_C
+      - name: PS_MOUISSUED_C
+      - name: PS_NON_ADI_C
+
+  - name: stg_salesforce_user
+    description: Represents a user in your organization.
+    columns:
+      - name: id
+        description: The unique, system-generated ID assigned during creation.
+        tests:
+          - not_null
+          - unique
+      - name: _fivetran_synced
+        description: The time at which fivetran last synced this record
+      - name: _fivetran_active
+        description: True if record is active, used to filter out only active records if History Mode is enabled
+      - name: _fivetran_deleted
+        description: True, if this field has been deleted
+      - name: about_me
+        description: Information about the user, such as areas of interest or skills.
+      - name: account_id
+        description: ID of the Account associated with a Customer Portal user. This field is null for Salesforce users.
+        tests:
+          - unique
+      - name: alias
+        description: Required. The user’s alias. For example, jsmith.
+        tests:
+          - not_null
+      - name: badge_text
+        description: The community role, displayed on the user profile page just below the user name.
+      - name: banner_photo_url
+        description: The URL for the user's banner photo.
+      - name: call_center_id
+        description: If Salesforce CRM Call Center is enabled, represents the call center to which this user is assigned.
+      - name: city
+        description: The city associated with the user. Up to 40 characters allowed.
+      - name: community_nickname
+        description: Name used to identify this user in the Community application, which includes the ideas and answers features.
+      - name: company_name
+        description: The name of the user’s company.
+      - name: contact_id
+        description: ID of the Contact associated with this account. The contact must have a value in the AccountId field or an error occurs.
+        tests:
+          - unique
+      - name: country
+        description: The country associated with the user.
+      - name: country_code
+        description: The ISO country code associated with the user.
+      - name: default_group_notification_frequency
+        description: The default frequency for sending the user's Chatter group email notifications when the user joins groups.
+      - name: delegated_approver_id
+        description: Id of the user who is a delegated approver for this user.
+        tests:
+          - unique
+      - name: department
+        description: The company department associated with the user.
+      - name: digest_frequency
+        description: The frequency at which the system sends the user’s Chatter personal email digest.
+      - name: division
+        description: The division associated with this user, similar to Department and unrelated to DefaultDivision.
+      - name: email
+        description: Required. The user’s email address.
+        tests:
+          - not_null
+      - name: email_encoding_key
+        description: Required. The email encoding for the user, such as ISO-8859-1 or UTF-8.
+      - name: email_preferences_auto_bcc
+        description: Determines whether the user receives copies of sent emails. This option applies only if compliance BCC emails are not enabled.
+      - name: employee_number
+        description: The user’s employee number.
+      - name: extension
+        description: The user’s phone extension number.
+      - name: fax
+        description: The user’s fax number.
+      - name: federation_identifier
+        description: Indicates the value that must be listed in the Subject element of a Security Assertion Markup Language (SAML) IDP certificate to authenticate the user for a client application using single sign-on.
+      - name: first_name
+        description: The user’s first name.
+      - name: forecast_enabled
+        description: Indicates whether the user is enabled as a forecast manager (true) or not (false).
+      - name: full_photo_url
+        description: The URL for the user's profile photo.
+      - name: geocode_accuracy
+        description: The level of accuracy of a location’s geographical coordinates compared with its physical address.
+      - name: individual_id
+        description: ID of the data privacy record associated with this user. This field is available if Data Protection and Privacy is enabled.
+        tests:
+          - unique
+      - name: is_active
+        description: Indicates whether the user has access to log in (true) or not (false).
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: is_profile_photo_active
+        description: Indicates whether a user has a profile photo (true) or not (false).
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: language_locale_key
+        description: Required. The user’s language, such as “French” or “Chinese (Traditional).”
+        tests:
+          - not_null
+      - name: last_login_date
+        description: The date and time when the user last successfully logged in. This value is updated if 60 seconds have elapsed since the user’s last login.
+      - name: last_name
+        description: Required. The user’s last name.
+        tests:
+          - not_null
+      - name: last_referenced_date
+        description: The timestamp for when the current user last viewed a record related to this record.
+      - name: last_viewed_date
+        description: The timestamp for when the current user last viewed this record. If this value is null, this record might only have been referenced (LastReferencedDate) and not viewed.
+      - name: latitude
+        description: Used with Longitude to specify the precise geolocation of an address.
+      - name: locale_sid_key
+        description: Required. This field is a restricted picklist field. The value of the field affects formatting and parsing of values, especially numeric values, in the user interface.
+        tests:
+          - not_null
+      - name: longitude
+        description: Used with Latitude to specify the precise geolocation of an address.
+      - name: manager_id
+        description: The Id of the user who manages this user.
+        tests:
+          - unique
+      - name: medium_banner_photo_url
+        description: The URL for the medium-sized user profile banner photo.
+      - name: mobile_phone
+        description: The user’s mobile or cellular phone number.
+      - name: name
+        description: Concatenation of FirstName and LastName.
+      - name: offline_trial_expiration_date
+        description: The date and time when the user’s Connect Offline trial expires.
+      - name: phone
+        description: The user’s phone number.
+      - name: postal_code
+        description: The user’s postal or ZIP code.
+      - name: profile_id
+        description: Required. ID of the user’s Profile. Use this value to cache metadata based on profile. In earlier releases, this was RoleId.
+        tests:
+          - not_null
+      - name: receives_admin_info_emails
+        description: Indicates whether the user receives email for administrators from Salesforce (true) or not (false).
+      - name: receives_info_emails
+        description: Indicates whether the user receives informational email from Salesforce (true) or not (false).
+      - name: sender_email
+        description: The email address used as the From address when the user sends emails. This address is the same value shown in Setup on the My Email Settings page.
+      - name: sender_name
+        description: The name used as the email sender when the user sends emails. This name is the same value shown in Setup on the My Email Settings page.
+      - name: signature
+        description: The signature text added to emails.
+      - name: small_banner_photo_url
+        description: The URL for the small user profile banner photo.
+      - name: small_photo_url
+        description: The URL for a thumbnail of the user's profile photo.
+      - name: state
+        description: The state associated with the User.
+      - name: state_code
+        description: The ISO state code associated with the user.
+      - name: street
+        description: The street address associated with the User.
+      - name: time_zone_sid_key
+        description: Required. This field is a restricted picklist field. A User time zone affects the offset used when displaying or entering times in the user interface.
+        tests:
+          - not_null
+      - name: title
+        description: The user’s business title, such as “Vice President.”
+      - name: username
+        description: Contains the name that a user enters to log in. The value for this field must be in the form of an email address, using all lowercase characters. It must also be unique across all organizations.
+      - name: user_role_id
+        description: ID of the user’s UserRole.
+      - name: user_type
+        description: The category of user license.
+      - name: MIDDLE_NAME
+      - name: SUFFIX
+      - name: EMAIL_PREFERENCES_AUTO_BCC_STAY_IN_TOUCH
+      - name: EMAIL_PREFERENCES_STAY_IN_TOUCH_REMINDER
+      - name: STAY_IN_TOUCH_SUBJECT
+      - name: STAY_IN_TOUCH_SIGNATURE
+      - name: STAY_IN_TOUCH_NOTE
+      - name: CREATED_DATE
+      - name: CREATED_BY_ID
+        tests:
+          - not_null
+      - name: LAST_MODIFIED_DATE
+      - name: LAST_MODIFIED_BY_ID
+      - name: SYSTEM_MODSTAMP
+      - name: OFFLINE_PDA_TRIAL_EXPIRATION_DATE
+      - name: USER_PERMISSIONS_MARKETING_USER
+      - name: USER_PERMISSIONS_OFFLINE_USER
+      - name: USER_PERMISSIONS_AVANTGO_USER
+      - name: USER_PERMISSIONS_CALL_CENTER_AUTO_LOGIN
+      - name: USER_PERMISSIONS_SFCONTENT_USER
+      - name: USER_PERMISSIONS_KNOWLEDGE_USER
+      - name: USER_PERMISSIONS_INTERACTION_USER
+      - name: USER_PERMISSIONS_SUPPORT_USER
+      - name: USER_PERMISSIONS_LIVE_AGENT_USER
+      - name: USER_PREFERENCES_ACTIVITY_REMINDERS_POPUP
+      - name: USER_PREFERENCES_EVENT_REMINDERS_CHECKBOX_DEFAULT
+      - name: USER_PREFERENCES_TASK_REMINDERS_CHECKBOX_DEFAULT
+      - name: USER_PREFERENCES_REMINDER_SOUND_OFF
+      - name: USER_PREFERENCES_DISABLE_ALL_FEEDS_EMAIL
+      - name: USER_PREFERENCES_DISABLE_FOLLOWERS_EMAIL
+      - name: USER_PREFERENCES_DISABLE_PROFILE_POST_EMAIL
+      - name: USER_PREFERENCES_DISABLE_CHANGE_COMMENT_EMAIL
+      - name: USER_PREFERENCES_DISABLE_LATER_COMMENT_EMAIL
+      - name: USER_PREFERENCES_DIS_PROF_POST_COMMENT_EMAIL
+      - name: USER_PREFERENCES_APEX_PAGES_DEVELOPER_MODE
+      - name: USER_PREFERENCES_RECEIVE_NO_NOTIFICATIONS_AS_APPROVER
+      - name: USER_PREFERENCES_RECEIVE_NOTIFICATIONS_AS_DELEGATED_APPROVER
+      - name: USER_PREFERENCES_HIDE_CSNGET_CHATTER_MOBILE_TASK
+      - name: USER_PREFERENCES_DISABLE_MENTIONS_POST_EMAIL
+      - name: USER_PREFERENCES_DIS_MENTIONS_COMMENT_EMAIL
+      - name: USER_PREFERENCES_HIDE_CSNDESKTOP_TASK
+      - name: USER_PREFERENCES_HIDE_CHATTER_ONBOARDING_SPLASH
+      - name: USER_PREFERENCES_HIDE_SECOND_CHATTER_ONBOARDING_SPLASH
+      - name: USER_PREFERENCES_DIS_COMMENT_AFTER_LIKE_EMAIL
+      - name: USER_PREFERENCES_DISABLE_LIKE_EMAIL
+      - name: USER_PREFERENCES_SORT_FEED_BY_COMMENT
+      - name: USER_PREFERENCES_DISABLE_MESSAGE_EMAIL
+      - name: USER_PREFERENCES_DISABLE_BOOKMARK_EMAIL
+      - name: USER_PREFERENCES_DISABLE_SHARE_POST_EMAIL
+      - name: USER_PREFERENCES_ENABLE_AUTO_SUB_FOR_FEEDS
+      - name: USER_PREFERENCES_DISABLE_FILE_SHARE_NOTIFICATIONS_FOR_API
+      - name: USER_PREFERENCES_SHOW_TITLE_TO_EXTERNAL_USERS
+      - name: USER_PREFERENCES_SHOW_MANAGER_TO_EXTERNAL_USERS
+      - name: USER_PREFERENCES_SHOW_EMAIL_TO_EXTERNAL_USERS
+      - name: USER_PREFERENCES_SHOW_WORK_PHONE_TO_EXTERNAL_USERS
+      - name: USER_PREFERENCES_SHOW_MOBILE_PHONE_TO_EXTERNAL_USERS
+      - name: USER_PREFERENCES_SHOW_FAX_TO_EXTERNAL_USERS
+      - name: USER_PREFERENCES_SHOW_STREET_ADDRESS_TO_EXTERNAL_USERS
+      - name: USER_PREFERENCES_SHOW_CITY_TO_EXTERNAL_USERS
+      - name: USER_PREFERENCES_SHOW_STATE_TO_EXTERNAL_USERS
+      - name: USER_PREFERENCES_SHOW_POSTAL_CODE_TO_EXTERNAL_USERS
+      - name: USER_PREFERENCES_SHOW_COUNTRY_TO_EXTERNAL_USERS
+      - name: USER_PREFERENCES_SHOW_PROFILE_PIC_TO_GUEST_USERS
+      - name: USER_PREFERENCES_SHOW_TITLE_TO_GUEST_USERS
+      - name: USER_PREFERENCES_SHOW_CITY_TO_GUEST_USERS
+      - name: USER_PREFERENCES_SHOW_STATE_TO_GUEST_USERS
+      - name: USER_PREFERENCES_SHOW_POSTAL_CODE_TO_GUEST_USERS
+      - name: USER_PREFERENCES_SHOW_COUNTRY_TO_GUEST_USERS
+      - name: USER_PREFERENCES_SHOW_FORECASTING_CHANGE_SIGNALS
+      - name: USER_PREFERENCES_HIDE_S_1_BROWSER_UI
+      - name: USER_PREFERENCES_DISABLE_ENDORSEMENT_EMAIL
+      - name: USER_PREFERENCES_PATH_ASSISTANT_COLLAPSED
+      - name: USER_PREFERENCES_CACHE_DIAGNOSTICS
+      - name: USER_PREFERENCES_SHOW_EMAIL_TO_GUEST_USERS
+      - name: USER_PREFERENCES_SHOW_MANAGER_TO_GUEST_USERS
+      - name: USER_PREFERENCES_SHOW_WORK_PHONE_TO_GUEST_USERS
+      - name: USER_PREFERENCES_SHOW_MOBILE_PHONE_TO_GUEST_USERS
+      - name: USER_PREFERENCES_SHOW_FAX_TO_GUEST_USERS
+      - name: USER_PREFERENCES_SHOW_STREET_ADDRESS_TO_GUEST_USERS
+      - name: USER_PREFERENCES_LIGHTNING_EXPERIENCE_PREFERRED
+      - name: USER_PREFERENCES_HIDE_END_USER_ONBOARDING_ASSISTANT_MODAL
+      - name: USER_PREFERENCES_HIDE_LIGHTNING_MIGRATION_MODAL
+      - name: USER_PREFERENCES_HIDE_SFX_WELCOME_MAT
+      - name: USER_PREFERENCES_HIDE_BIGGER_PHOTO_CALLOUT
+      - name: USER_PREFERENCES_GLOBAL_NAV_BAR_WTSHOWN
+      - name: USER_PREFERENCES_GLOBAL_NAV_GRID_MENU_WTSHOWN
+      - name: USER_PREFERENCES_CREATE_LEXAPPS_WTSHOWN
+      - name: USER_PREFERENCES_FAVORITES_WTSHOWN
+      - name: USER_PREFERENCES_RECORD_HOME_SECTION_COLLAPSE_WTSHOWN
+      - name: USER_PREFERENCES_RECORD_HOME_RESERVED_WTSHOWN
+      - name: USER_PREFERENCES_FAVORITES_SHOW_TOP_FAVORITES
+      - name: USER_PREFERENCES_EXCLUDE_MAIL_APP_ATTACHMENTS
+      - name: USER_PREFERENCES_SUPPRESS_TASK_SFXREMINDERS
+      - name: USER_PREFERENCES_SUPPRESS_EVENT_SFXREMINDERS
+      - name: USER_PREFERENCES_PREVIEW_CUSTOM_THEME
+      - name: USER_PREFERENCES_HAS_CELEBRATION_BADGE
+      - name: USER_PREFERENCES_USER_DEBUG_MODE_PREF
+      - name: USER_PREFERENCES_SRHOVERRIDE_ACTIVITIES
+      - name: USER_PREFERENCES_NEW_LIGHTNING_REPORT_RUN_PAGE_ENABLED
+      - name: USER_PREFERENCES_REVERSE_OPEN_ACTIVITIES_VIEW
+      - name: USER_PREFERENCES_HAS_SENT_WARNING_EMAIL
+      - name: USER_PREFERENCES_HAS_SENT_WARNING_EMAIL_238
+      - name: USER_PREFERENCES_HAS_SENT_WARNING_EMAIL_240
+      - name: USER_PREFERENCES_HIDE_BROWSE_PRODUCT_REDIRECT_CONFIRMATION
+      - name: USER_PREFERENCES_HIDE_ONLINE_SALES_APP_WELCOME_MAT
+      - name: PORTAL_ROLE
+      - name: IS_PORTAL_ENABLED
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: IS_EXT_INDICATOR_VISIBLE
+      - name: OUT_OF_OFFICE_MESSAGE
+      - name: MEDIUM_PHOTO_URL
+      - name: ECHOSIGN_DEV_1_ECHO_SIGN_EMAIL_VERIFIED_C
+      - name: ECHOSIGN_DEV_1_ECHO_SIGN_ALLOW_DELEGATED_SENDING_C
+
+  - name: stg_salesforce_digital_certificate
+    description: TBC
+    columns:
+      - name: digital_certificate_id
+        tests:
+          - not_null
+          - unique
+      - name: is_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: name
+      - name: created_date
+      - name: created_by_id
+        tests:
+          - not_null
+      - name: last_modified_date
+      - name: last_modified_by_id
+        tests:
+          - not_null
+      - name: system_modstamp
+      - name: last_viewed_date
+      - name: last_referenced_date
+      - name: account_c
+      - name: contact_c
+      - name: email_for_symantec_digital_certificate_c
+      - name: obtain_digital_certificate_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: symantec_digital_certificate_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: related_application_c
+      - name: requires_a_new_digital_certificate_c
+      - name: symantec_digital_certificate_suitable_fo_c
+      - name: authorisor_email_c
+      - name: authorisor_name_c
+      - name: certificate_expiry_date_c
+      - name: certificate_holder_type_c
+      - name: certificate_status_c
+      - name: certificate_type_c
+      - name: city_c
+      - name: date_form_received_c
+      - name: date_ordered_c
+      - name: date_requested_c
+      - name: date_terminated_c
+      - name: express_post_tracking_number_c
+      - name: express_post_c
+      - name: order_status_c
+      - name: postcode_c
+      - name: previous_digital_certificate_c
+      - name: primary_certificate_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: re_ordered_c
+      - name: reason_for_fee_waiver_c
+      - name: reason_for_termination_c
+      - name: state_c
+      - name: street_1_c
+      - name: street_2_c
+      - name: street_3_c
+      - name: subscriber_id_c
+        tests:
+          - not_null
+      - name: erizon_apply_charge_c
+      - name: verizon_certificate_required_c
+      - name: erizon_portal_status_c
+      - name: mail_for_symantec_digital_ceriticate_c
+      - name: comments_c
+      - name: legacy_id_c
+      - name: pexa_symantec_c
+      - name: _fivetran_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: _fivetran_synced
+
+  - name: stg_salesforce_case
+    description: TBC
+    columns:
+      - name: case_id
+        tests:
+          - not_null
+          - unique
+      - name: is_deleted
+      - name: master_record_id
+      - name: case_number
+      - name: contact_id
+        tests:
+          - not_null
+      - name: account_id
+        tests:
+          - not_null
+      - name: parent_id
+      - name: supplied_name
+      - name: supplied_email
+      - name: supplied_phone
+      - name: supplied_company
+      - name: type
+      - name: record_type_id
+        tests:
+          - not_null
+      - name: status
+      - name: reason
+      - name: origin
+      - name: language
+      - name: subject
+      - name: priority
+      - name: case_description
+      - name: is_closed
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: closed_date
+      - name: is_escalated
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: owner_id
+        tests:
+          - not_null
+      - name: created_date
+      - name: created_by_id
+        tests:
+          - not_null
+      - name: last_modified_date
+      - name: last_modified_by_id
+        tests:
+          - not_null
+      - name: system_modstamp
+      - name: contact_phone
+      - name: contact_mobile
+      - name: contact_email
+      - name: contact_fax
+      - name: comments
+      - name: last_viewed_date
+      - name: last_referenced_date
+      - name: sub_category_c
+      - name: sub_sub_category_c
+      - name: pdb_reference_c
+      - name: _fivetran_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: _fivetran_synced
+      - name: workspace_id_c
+      - name: work_around_available_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: clone_case_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: digital_certificate_4_middle_name_c
+      - name: asset_id
+      - name: digital_certificate_1_email_c
+      - name: settlement_time_c
+      - name: internal_status_c
+      - name: digital_certificate_6_last_name_c
+      - name: digital_certificate_7_last_name_c
+      - name: digital_certificate_8_last_name_c
+      - name: direct_debit_bank_account_number_c
+      - name: digital_certificate_5_email_c
+      - name: resolved_email_sent_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: payment_authoriser_3_office_title_c
+      - name: urgency_c
+      - name: payment_authoriser_4_office_title_c
+      - name: call_notes_c
+      - name: integrated_service_partner_reference_c
+      - name: jira_ticket_description_c
+      - name: digital_certificate_8_email_c
+      - name: assignment_group_c
+      - name: digital_certificate_6_middle_name_c
+      - name: digital_certificate_5_last_name_c
+      - name: digital_certificate_4_last_name_c
+      - name: digital_certificate_3_last_name_c
+      - name: cause_c
+      - name: digital_certificate_1_last_name_c
+      - name: digital_certificate_2_last_name_c
+      - name: digital_certificate_2_middle_name_c
+      - name: trust_account_name_c
+      - name: payment_authoriser_5_name_c
+      - name: close_on_create_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: in_flight_transaction_c
+      - name: settlement_time_2_c
+      - name: digital_certificate_7_middle_name_c
+      - name: direct_debit_bsb_c
+      - name: not_a_new_registration_c
+      - name: transaction_jurisdiction_c
+      - name: number_of_impacted_users_c
+      - name: digital_certificate_4_email_c
+      - name: digital_certificate_1_middle_name_c
+      - name: build_number_c
+      - name: validation_officer_c
+      - name: digital_certificate_1_name_c
+      - name: trust_financial_instiution_name_c
+      - name: digital_certificate_8_middle_name_c
+      - name: settlement_date_c
+      - name: digital_certificate_7_email_c
+      - name: email_received_more_than_3_days_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: einstein_article_field_c
+      - name: direct_debit_account_name_c
+      - name: payment_authoriser_2_name_c
+      - name: trust_account_number_c
+      - name: digital_certificate_5_name_c
+      - name: source_id
+      - name: planned_release_date_c
+      - name: number_of_messages_received_c
+      - name: reason_for_contact_for_customer_email_c
+      - name: service_now_reference_c
+      - name: is_this_a_new_registration_c
+      - name: date_survey_last_sent_c
+      - name: genesys_interaction_id_c
+      - name: severity_c
+      - name: settlement_in_the_next_10_days_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: identified_internally_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: case_cannot_be_reopened_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: jurisdiction_c
+      - name: sub_manager_c
+      - name: change_code_required_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: digital_certificate_5_middle_name_c
+      - name: payment_authoriser_5_office_title_c
+      - name: digital_certificate_3_email_c
+      - name: jira_reference_c
+      - name: related_case_c
+      - name: digital_certificate_3_middle_name_c
+      - name: first_call_resolution_c
+      - name: digital_certificate_2_name_c
+      - name: transaction_type_c
+      - name: impact_c
+      - name: child_case_auto_email_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: integrated_service_partner_c
+      - name: customer_progress_c
+      - name: digital_certificate_8_name_c
+      - name: digital_certificate_6_name_c
+      - name: reference_number_c
+      - name: resolution_c
+      - name: payment_authoriser_2_office_title_c
+      - name: digital_certificate_4_name_c
+      - name: payment_authoriser_1_name_c
+      - name: update_upon_case_comments_c
+      - name: existing_abn_c
+      - name: date_contact_last_surveyed_c
+      - name: number_of_messages_sent_c
+      - name: digital_certificate_expiry_date_c
+      - name: payment_authoriser_3_name_c
+      - name: payment_authoriser_4_name_c
+      - name: new_registration_c
+      - name: business_hours_id
+      - name: payment_authoriser_1_office_title_c
+      - name: digital_certificate_2_email_c
+      - name: legacy_id_c
+      - name: integrated_service_partner_2_c
+      - name: digital_certificate_6_email_c
+      - name: is_closed_on_create
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: mortgage_reference_id_c
+      - name: additional_detail_for_customer_email_c
+      - name: trust_bsb_c
+      - name: automation_date_time_c
+      - name: subscription_c
+      - name: case_label_c
+      - name: direct_debti_financial_inst_name_c
+      - name: fi_customer_number_c
+      - name: configuration_item_c
+      - name: digital_certificate_7_name_c
+      - name: case_resolution_c
+      - name: case_reopened_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: lodgement_status_c
+      - name: digital_certificate_3_name_c
+      - name: resolution_notes_for_customer_email_c
+
+  - name: stg_salesforce_contact
+    description: TBC
+    columns:
+      - name: contact_id
+        tests:
+          - not_null
+          - unique
+      - name: is_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: master_record_id
+      - name: account_id
+        tests:
+          - not_null
+      - name: is_person_account
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: last_name
+      - name: first_name
+      - name: salutation
+      - name: middle_name
+      - name: suffix
+      - name: contact_name
+      - name: mailing_street
+      - name: mailing_city
+      - name: mailing_state
+      - name: mailing_postal_code
+      - name: mailing_country
+      - name: mailing_state_code
+      - name: mailing_country_code
+      - name: mailing_latitude
+      - name: mailing_longitude
+      - name: mailing_geocode_accuracy
+      - name: phone
+        tests:
+          - salesforce_phone_length_check
+      - name: fax
+      - name: mobile_phone
+        tests:
+          - digit_length_check:
+              digit_length: 10
+      - name: reports_to_id
+      - name: email
+        tests:
+          - email_format_check
+      - name: title
+      - name: department
+      - name: owner_id
+        tests:
+          - not_null
+      - name: created_date
+      - name: created_by_id
+        tests:
+          - not_null
+      - name: last_modified_date
+      - name: last_modified_by_id
+        tests:
+          - not_null
+      - name: system_modstamp
+      - name: last_activity_date
+      - name: last_curequest_date
+      - name: last_cuupdate_date
+      - name: last_viewed_date
+      - name: last_referenced_date
+      - name: email_bounced_reason
+      - name: email_bounced_date
+      - name: is_email_bounced
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: photo_url
+      - name: jigsaw
+      - name: jigsaw_contact_id
+      - name: individual_id
+      - name: exchange_subscriber_id_c
+      - name: _fivetran_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: _fivetran_synced
+      - name: pexa_client_gift_c
+      - name: birthdate
+      - name: secret_question_1_c
+      - name: lead_source
+      - name: ps_smssubscription_updated_c
+      - name: primary_subscriber_manager_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: ps_voiprovider_c
+      - name: role_c
+      - name: ps_offer_subscription_updated_c
+      - name: other_latitude
+      - name: ps_what_they_like_c
+      - name: trust_account_owners_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: communication_notifications_c
+      - name: finance_contact_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: ps_bio_c
+      - name: authorised_signatory_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: capacity_for_signing_c
+      - name: ps_external_id_c
+      - name: other_street
+      - name: ps_organisation_c
+      - name: other_city
+      - name: ps_communication_type_c
+      - name: home_phone
+      - name: subscriber_id_c
+      - name: ps_survey_participation_c
+      - name: ps_linked_in_c
+      - name: ps_relationship_status_c
+      - name: ps_alcoholic_preferences_c
+      - name: other_geocode_accuracy
+      - name: preferred_name_c
+      - name: other_state_code
+      - name: secret_question_2_answer_c
+      - name: ps_pexadivision_c
+      - name: other_country
+      - name: assistant_phone
+      - name: ps_consumer_id_c
+      - name: ps_non_alcoholic_preferences_c
+      - name: ps_mobile_phone_wash_results_c
+      - name: ps_phone_numbers_las_washed_results_c
+      - name: secret_question_2_c
+      - name: has_opted_out_of_fax
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: ps_email_subscription_updated_c
+      - name: ps_method_c
+      - name: ps_same_as_entity_address_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: subscriber_role_c
+      - name: contact_description
+      - name: ps_reoccuring_meetings_c
+      - name: requires_additional_digital_certificate_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: ps_pexacertified_status_c
+      - name: pexa_payment_authorisers_1_c
+      - name: ps_reporting_manager_c
+      - name: subscriber_manager_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: disc_profile_c
+      - name: assistant_name
+      - name: ps_secondary_email_c
+      - name: contact_frequency_c
+      - name: ps_voicomplete_c
+      - name: ps_direct_reports_c
+      - name: ps_pexacertified_date_c
+      - name: survey_opt_out_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: secret_question_1_answer_c
+      - name: ps_outage_notifications_c
+      - name: ps_business_unit_area_c
+      - name: ps_dietary_requirements_c
+      - name: pexa_payment_authorisers_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: primary_signatory_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: ps_offer_opt_out_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: exchange_last_login_c
+      - name: other_state
+      - name: ps_business_phone_wash_results_c
+      - name: ps_registration_status_c
+      - name: other_phone
+      - name: contact_exchange_access_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: contacts_status_c
+      - name: ps_terms_conditions_version_c
+      - name: other_country_code
+      - name: other_postal_code
+      - name: ps_registration_date_c
+      - name: ps_terms_accepted_date_c
+      - name: ps_smsopt_out_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: ps_dateof_voi_c
+      - name: public_contact_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: other_longitude
+      - name: ps_events_c
+      - name: date_last_survey_sent_c
+      - name: do_not_call
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: has_opted_out_of_email
+        tests:
+          - accepted_values:
+              values: [0, 1]
+
+  - name: stg_salesforce_subscription
+    description: TBC
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+      - name: owner_id
+        tests:
+          - not_null
+      - name: is_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: name
+      - name: created_date
+      - name: created_by_id
+        tests:
+          - not_null
+      - name: last_modified_date
+      - name: last_modified_by_id
+        tests:
+          - not_null
+      - name: system_modstamp
+      - name: last_activity_date
+      - name: last_viewed_date
+      - name: last_referenced_date
+      - name: ps_account_c
+      - name: ps_acln_c
+      - name: ps_afin_c
+      - name: ps_apcaiddestination_c
+      - name: ps_apcaidsources_c
+      - name: ps_arbn_c
+      - name: ps_account_category_c
+      - name: ps_activation_date_c
+      - name: ps_active_digital_certificate_c
+      - name: ps_approvedfor_soft_cert_c
+      - name: ps_digital_signing_software_version_c
+      - name: ps_digital_signing_software_c
+      - name: ps_esa_c
+      - name: ps_expiry_date_c
+      - name: ps_lenderof_record_c
+      - name: ps_microsoft_window_version_c
+      - name: ps_non_adi_c
+      - name: ps_onboarding_id_c
+      - name: ps_other_category_c
+      - name: ps_own_esaaccount_c
+      - name: ps_pasigned_by_c
+      - name: ps_paversion_c
+      - name: ps_pexarevenue_c
+      - name: ps_reasonfor_suspension_c
+      - name: ps_reasonfor_termination_c
+      - name: ps_settler_type_c
+      - name: ps_sponsor_c
+      - name: ps_status_c
+      - name: ps_sub_category_c
+      - name: ps_subscriber_id_c
+      - name: ps_subscription_type_c
+      - name: ps_suspension_termination_date_c
+      - name: ps_termination_other_c
+      - name: ps_two_factor_authentication_c
+      - name: ps_operating_model_preference_c
+      - name: ps_opportunity_id_c
+      - name: ps_expiry_date_2_c
+      - name: ps_master_policy_number_c
+      - name: ps_master_policy_number_2_c
+      - name: _fivetran_deleted
+      - name: _fivetran_synced
+
   - name: stg_salesforce_account
     description: Represents an individual account, which is an organization or person involved with your business (such as customers, competitors, and partners).
     columns:
@@ -317,4 +1484,262 @@ models:
       - name: PS_COMMUNICATION_TYPE_PC
       - name: PEXA_CLIENT_GIFT_PC
 
- 
+  - name: stg_salesforce_event
+    description: TBC
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: _fivetran_synced
+      - name: record_type_id
+        tests:
+          - not_null
+      - name: who_id
+      - name: what_id
+      - name: who_count
+      - name: what_count
+      - name: subject
+      - name: location
+      - name: is_all_day_event
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: activity_date_time
+      - name: activity_date
+      - name: duration_in_minutes
+      - name: start_date_time
+      - name: end_date_time
+      - name: end_date
+      - name: event_description
+      - name: account_id
+        tests:
+          - not_null
+      - name: owner_id
+        tests:
+          - not_null
+      - name: type
+      - name: is_private
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: show_as
+      - name: event_is_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: is_child
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: is_group_event
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: group_event_type
+      - name: created_date
+      - name: created_by_id
+        tests:
+          - not_null
+      - name: last_modified_date
+      - name: last_modified_by_id
+        tests:
+          - not_null
+      - name: system_modstamp
+      - name: event_is_archived
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: is_visible_in_self_service
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: recurrence_activity_id
+      - name: is_recurrence
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: recurrence_start_date_time
+      - name: recurrence_end_date_only
+      - name: recurrence_time_zone_sid_key
+      - name: recurrence_type
+      - name: recurrence_interval
+      - name: recurrence_day_of_week_mask
+      - name: recurrence_day_of_month
+      - name: recurrence_instance
+      - name: recurrence_month_of_year
+      - name: reminder_date_time
+      - name: is_reminder_set
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: event_subtype
+      - name: is_recurrence_2_exclusion
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: recurrence_2_pattern_text
+      - name: recurrence_2_pattern_version
+      - name: is_recurrence_2
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: is_recurrence_2_exception
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: recurrence_2_pattern_start_date
+      - name: recurrence_2_pattern_time_zone
+      - name: ps_category_c
+      - name: ps_contact_direction_c
+      - name: ps_other_category_c
+      - name: ps_other_sub_category_c
+      - name: ps_sub_category_c
+      - name: call_meeting_duration_c
+      - name: after_call_time_c
+      - name: call_connected_time_c
+      - name: call_disconnected_time_c
+      - name: called_number_c
+      - name: caller_number_c
+      - name: genesys_interaction_id_c
+      - name: genesys_queue_name_c
+      - name: internal_call_c
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: participant_id_c
+      - name: wrap_up_code_c
+      - name: _fivetran_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+
+      - name: _fivetran_synced
+
+  - name: stg_salesforce_opportunity_line_item
+    description: TBC
+    columns:
+      - name: opportunity_line_item_id
+        tests:
+          - not_null
+          - unique
+      - name: opportunity_id
+      - name: sort_order
+      - name: pricebook_entry_id
+        tests:
+          - not_null
+      - name: product_2_id
+        tests:
+          - not_null
+      - name: product_code
+      - name: opportunity_line_item_name
+      - name: quantity
+      - name: total_price
+      - name: unit_price
+      - name: list_price
+      - name: service_date
+      - name: opportunity_line_item_description
+      - name: created_date
+      - name: created_by_id
+        tests:
+          - not_null
+      - name: last_modified_date
+      - name: last_modified_by_id
+        tests:
+          - not_null
+      - name: system_modstamp
+      - name: opportunity_line_item_is_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: last_viewed_date
+      - name: last_referenced_date
+      - name: subtotal
+      - name: discount
+      - name: _fivetran_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: _fivetran_synced
+
+  - name: stg_salesforce_opportunity_team_member
+    description: TBC
+    columns:
+      - name: opportunity_team_member_id
+        tests:
+          - not_null
+          - unique
+      - name: opportunity_id
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+      - name: opportunity_team_member_name
+      - name: photo_url
+      - name: title
+      - name: team_member_role
+      - name: opportunity_access_level
+      - name: created_date
+      - name: created_by_id
+        tests:
+          - not_null
+      - name: last_modified_date
+      - name: last_modified_by_id
+        tests:
+          - not_null
+      - name: system_modstamp
+      - name: is_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: _fivetran_deleted
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: _fivetran_synced
+
+  - name: stg_salesforce_product_2
+    description: TBC
+    columns:
+      - name: PRODUCT_ID
+        tests:
+          - not_null
+          - unique
+      - name: NAME
+      - name: PRODUCT_CODE
+      - name: DESCRIPTION
+      - name: PRODUCT_IS_ACTIVE
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: CREATED_DATE
+      - name: CREATED_BY_ID
+        tests:
+          - not_null
+      - name: LAST_MODIFIED_DATE
+      - name: LAST_MODIFIED_BY_ID
+        tests:
+          - not_null
+      - name: SYSTEM_MODSTAMP
+      - name: FAMILY
+      - name: EXTERNAL_DATA_SOURCE_ID
+      - name: PRODUCT_EXTERNAL_ID
+      - name: DISPLAY_URL
+      - name: QUANTITY_UNIT_OF_MEASURE
+      - name: PRODUCT_IS_DELETED
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: PRODUCT_IS_ARCHIVED
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: LAST_VIEWED_DATE
+      - name: LAST_REFERENCED_DATE
+      - name: STOCK_KEEPING_UNIT
+      - name: _FIVETRAN_DELETED
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: _FIVETRAN_SYNCED
