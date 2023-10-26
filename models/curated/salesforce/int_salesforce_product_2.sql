@@ -1,3 +1,8 @@
+{{
+    config(
+        tags=["piperider"]
+    )
+}}
 with
     base as (select * from {{ ref('stg_salesforce_product_2') }}),
 

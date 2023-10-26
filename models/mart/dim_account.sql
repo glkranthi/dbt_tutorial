@@ -1,3 +1,8 @@
+{{
+    config(
+        tags=["piperider"]
+    )
+}}
 SELECT
 {{ dbt_utils.generate_surrogate_key(['int_salesforce_account.account_id']) }} as account_key,
 ACCOUNT_ID,

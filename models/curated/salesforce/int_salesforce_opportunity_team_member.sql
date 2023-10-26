@@ -1,3 +1,8 @@
+{{
+    config(
+        tags=["piperider"]
+    )
+}}
 with
     base as (select * from {{ ref('stg_salesforce_opportunity_team_member') }}),
 
