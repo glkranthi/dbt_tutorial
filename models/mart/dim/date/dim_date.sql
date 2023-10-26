@@ -1,3 +1,8 @@
+{{
+    config(
+        tags=["piperider"]
+    )
+}}
 with
     date_dimension as (select * from {{ ref("dates") }}),
     fiscal_periods as (

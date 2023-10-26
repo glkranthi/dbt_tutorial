@@ -1,3 +1,8 @@
+{{
+    config(
+        tags=["piperider"]
+    )
+}}
 select
     {{ dbt_utils.generate_surrogate_key(["int_salesforce_task.task_id"]) }} as task_key,
     task_id,

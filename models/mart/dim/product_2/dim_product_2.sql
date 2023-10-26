@@ -1,3 +1,8 @@
+{{
+    config(
+        tags=["piperider"]
+    )
+}}
 select
     {{ dbt_utils.generate_surrogate_key(["s.product_id"]) }} as sk_product_id,
     s.product_id,

@@ -1,3 +1,8 @@
+{{
+    config(
+        tags=["piperider"]
+    )
+}}
 select
     {{ dbt_utils.generate_surrogate_key(["int_salesforce_contact.contact_id"]) }} as sk_contact_id,
     contact_id,

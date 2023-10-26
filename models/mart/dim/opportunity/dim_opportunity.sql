@@ -1,3 +1,8 @@
+{{
+    config(
+        tags=["piperider"]
+    )
+}}
 select
     {{ dbt_utils.generate_surrogate_key(["s.opportunity_id"]) }} as sk_opportunity_id,
     s.opportunity_id,
