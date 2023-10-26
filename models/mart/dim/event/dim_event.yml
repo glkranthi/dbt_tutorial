@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: dim_event
+    columns:
+      - name: sk_event_id
+        tests:
+          - dbt_constraints.primary_key
+      - name: event_id
+        tests:
+          - not_null
+      - name: EVENT_DESCRIPTION
+      - name: EVENT_EVENT_SUBTYPE
+      - name: EVENT_IS_ALL_DAY_EVENT
+      - name: EVENT_IS_PRIVATE
+      - name: EVENT_IS_RECURRENCE_2
+      - name: EVENT_IS_REMINDER_SET
+      - name: EVENT_IS_VISIBLE_IN_SELF_SERVICE
+      - name: EVENT_LOCATION
+      - name: EVENT_SHOW_AS
+      - name: EVENT_SUBJECT
+      - name: EVENT_TYPE
+      - name: EVENT_WHAT_ID
+      - name: EVENT_WHO_ID

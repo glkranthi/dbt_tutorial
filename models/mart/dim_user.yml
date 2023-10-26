@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: dim_user
+    columns:
+      - name: USER_ID
+      - name: USER_ID
+      - name: USER_ALIAS
+      - name: USER_CALLCENTERID
+      - name: USER_COMMUNITYNICKNAME
+      - name: USER_COMPANYNAME
+      - name: USER_CONTACTID
+      - name: USER_DEPARTMENT
+      - name: USER_DIVISION
+      - name: USER_EMAIL
+      - name: USER_EMPLOYEENUMBER
+      - name: USER_INDIVIDUALID
+      - name: USER_ISACTIVE
+      - name: USER_ISSYSTEMCONTROLLED
+      - name: USER_MANAGERID
+      - name: USER_NAME
+      - name: USER_PORTALROLE
+      - name: USER_TITLE
+      - name: USER_USERROLEID
+      - name: USER_USERSUBTYPE
+      - name: USER_USERNAME
+      - name: USER_WORKSPACEID

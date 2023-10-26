@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dim_task
+    columns:
+      - name: TASK_KEY
+      - name: TASK_ID
+      - name: TASK_ACTIVITYDATE
+      - name: TASK_CALLTYPE
+      - name: TASK_COMPLETEDDATETIME
+      - name: TASK_DESCRIPTION
+      - name: TASK_ISRECURRENCE
+      - name: TASK_OWNERID
+      - name: TASK_PRIORITY
+      - name: TASK_RECURRENCEINTERVAL
+      - name: TASK_STATUS
+      - name: TASK_SUBJECT
+      - name: TASK_TASKSUBTYPE
+      - name: TASK_TYPE
+      - name: TASK_WHATID
+      - name: TASK_WHOID

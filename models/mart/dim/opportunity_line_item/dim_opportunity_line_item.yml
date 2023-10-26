@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dim_opportunity_line_item
+    columns:
+      - name: sk_opportunity_line_item_id
+        tests:
+          - dbt_constraints.primary_key
+      - name: opportunity_line_item_id
+      - name: name
+      - name: description
+      - name: list_price
+      - name: discount
+      - name: opportunity_id
+      - name: product_2_id
+      - name: product_code
+      - name: quantity
+      - name: service_date
+      - name: subtotal
+      - name: total_price
+      - name: unit_price

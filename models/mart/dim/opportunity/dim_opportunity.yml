@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: dim_opportunity
+    columns:
+      - name: sk_opportunity_id
+        tests:
+          - dbt_constraints.primary_key
+      - name: opportunity_id
+        tests:
+          - not_null
+      - name: name
+        tests:
+          - not_null
+      - name: stage
+      - name: type
+      - name: opp_status
+        tests:
+          - accepted_values:
+              values: ['Won', 'Lost', 'Pipeline']
+      - name: description
+      - name: probability
+        tests:
+          - not_null
+      - name: total_opportunity_quantity
+      - name: owner_name

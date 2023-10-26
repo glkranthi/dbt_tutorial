@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: fact_case
+    columns:
+      - name: fk_case_id
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_case')
+              pk_column_name: sk_case_id
+      - name: fk_account_id
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_account')
+              pk_column_name: account_key
+      - name: fk_contact_id
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_contact')
+              pk_column_name: sk_contact_id
+      - name: fk_sf_created_date
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_date')
+              pk_column_name: sk_date_day
+      - name: fk_sf_modified_date
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_date')
+              pk_column_name: sk_date_day
+      - name: is_closed
+      - name: is_escalated
+      - name: is_deleted
+      - name: is_workaround
+      - name: sk_fact_case_id
+        tests:
+          - dbt_constraints.primary_key
+      - name: is_closed_on_create
+      - name: is_case_reopened

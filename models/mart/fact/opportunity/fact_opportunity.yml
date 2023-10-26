@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: fact_opportunity
+    columns:
+      - name: sk_opportunity_id
+        tests:
+          - dbt_constraints.primary_key
+      - name: fk_opportunity_id
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref("dim_opportunity")
+              pk_column_name: sk_opportunity_id
+      - name: fk_opportunity_accountid
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref("dim_account")
+              pk_column_name: account_key
+      - name: fk_opportunity_ownerid
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref("dim_user")
+              pk_column_name: user_key
+      - name: pricebook_2_id
+      - name: fk_created_by_user_id
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref("dim_user")
+              pk_column_name: user_key
+      - name: fk_modified_by_user_id
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref("dim_user")
+              pk_column_name: user_key
+      - name: has_open_activity
+      - name: is_deleted
+      - name: is_private
+      - name: pexa_is_buget_confirmed
+      - name: pexa_is_discovery_completed
+      - name: pexa_is_roi_analysis_done
+      - name: pexa_demo_done

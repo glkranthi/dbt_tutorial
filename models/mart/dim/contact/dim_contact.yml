@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: dim_contact
+    columns:
+      - name: sk_contact_id
+        tests:
+          - dbt_constraints.primary_key
+      - name: contact_id
+        tests:
+          - not_null
+      - name: contact_accountid
+      - name: contact_contact_exchange_access
+      - name: contact_contacts_status
+      - name: contact_department
+      - name: contact_description
+      - name: contact_email
+      - name: contact_exchange_last_login
+      - name: contact_exchange_subscriber_id
+      - name: contact_finance_contact
+      - name: contact_individualid
+      - name: contact_leadsource
+      - name: contact_mobilephone
+      - name: contact_name
+      - name: contact_ownerid
+      - name: contact_ps_business_unit_area
+      - name: contact_ps_dateofvoi
+      - name: contact_ps_method
+      - name: contact_ps_organisation
+      - name: contact_ps_pexacertifieddate
+      - name: contact_ps_pexacertifiedstatus
+      - name: contact_ps_pexadivision
+      - name: contact_ps_registrationdate
+      - name: contact_ps_registrationstatus
+      - name: contact_ps_secondaryemail
+      - name: contact_ps_voicomplete
+      - name: contact_ps_voiprovider
+      - name: contact_phone
+      - name: contact_preferred_name
+      - name: contact_primary_subscriber_manager
+      - name: contact_requires_additional_digital_certificate
+      - name: contact_role
+      - name: contact_subscriber_id
+      - name: contact_subscriber_manager
+      - name: contact_subscriber_role

@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: fact_event
+    columns:
+      - name: sk_event_id
+        tests:
+          - dbt_constraints.primary_key
+      - name: fk_event_id
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_event')
+              pk_column_name: sk_event_id
+      - name: fk_event_activity_date
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_date')
+              pk_column_name: sk_date_day
+      - name: fk_owner_id
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_user')
+              pk_column_name: sk_owner_id
+      - name: event_duration_in_minutes
+      - name: event_activity_date_time
+      - name: event_duration_in_minutes
+      - name: event_start_date_time
+      - name: event_end_date_time

@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: fact_opportunity_line_item
+    columns:
+      - name: sk_opportunity_line_item_id
+        tests:
+        - dbt_constraints.primary_key
+      - name: fk_opportunity_line_item_id
+        tests:
+        - dbt_constraints.foreign_key:
+              pk_table_name: ref("dim_opportunity_line_item")
+              pk_column_name: sk_opportunity_line_item_id
+      - name: name
+      - name: description
+      - name: list_price
+      - name: discount
+      - name: fk_opportunity_id
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref("dim_opportunity")
+              pk_column_name: sk_opportunity_id
+      - name: fk_opportunity_product_2_id
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref("dim_product_2")
+              pk_column_name: sk_product_id
+      - name: product_code
+      - name: quantity
+      - name: fk_date_day
+        tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref("dim_date")
+              pk_column_name: sk_date_day
+      - name: subtotal
+      - name: total_price
+      - name: unit_price

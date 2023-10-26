@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: dim_case
+    columns:
+      - name: case_id
+        tests:
+          - not_null
+      - name: case_number
+      - name: case_status
+      - name: case_origin
+      - name: case_priority
+      - name: sk_case_id
+        tests:
+          - dbt_constraints.primary_key
+      - name: case_type
+      - name: subject
+      - name: pexa_internal_status
+      - name: pexa_reference_no
+      - name: pexa_impact
+      - name: pexa_sub_category
+      - name: pexa_sub_category2
+      - name: pexa_assignment_group
